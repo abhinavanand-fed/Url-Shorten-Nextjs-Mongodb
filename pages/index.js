@@ -1,15 +1,13 @@
 import Head from "next/head";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import styles from "../styles/Home.module.css";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import styles from "../styles/Home.module.css";
 
 export default function Home({ urlList }) {
   const [data, setData] = useState(urlList);
   const [newUrl, setNewUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  //on submit form call post API
   const handleOnSubmit = async (e) => {
     e.preventDefault();
     const _newUrl = newUrl;
@@ -24,7 +22,6 @@ export default function Home({ urlList }) {
 
     const content = await response.json();
     if (content) {
-      //add new url above all previous urls
       setData([content, ...data]);
     }
   };
@@ -64,15 +61,13 @@ export default function Home({ urlList }) {
                   <React.Fragment key={urlObject.code}>
                     <tr scope="row">
                       <td>
-                        {
-                          <a href={urlObject.url}>
-                            {urlObject.url.slice(0, 120)}
-                            {urlObject.url.length > 120 ? "..." : ""}
-                          </a>
-                        }
+                        <a href={urlObject.url} target="_blank" rel="noreferrer">
+                          {urlObject.url.slice(0, 120)}
+                          {urlObject.url.length > 120 ? "..." : ""}
+                        </a>
                       </td>
                       <td>
-                        <a target="_blank" href={`/api/${urlObject.code}`}>
+                        <a target="_blank" href={`/api/${urlObject.code}`} rel="noreferrer">
                           {urlObject.code}
                         </a>
                       </td>
@@ -93,7 +88,6 @@ export default function Home({ urlList }) {
 }
 
 export async function getServerSideProps(context) {
-  //call api on load
   const res = await fetch("http://localhost:3000/api/url");
   const urlList = await res.json();
 
